@@ -10,8 +10,8 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
-import io.flutter.plugin.common.PluginRegistry.ViewDestroyListener;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry.ViewDestroyListener;
 import io.flutter.view.FlutterNativeView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,6 +20,24 @@ import org.json.JSONException;
 public class AndroidAlarmManagerPlugin implements MethodCallHandler, ViewDestroyListener {
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
+    final MethodChannel channel =
+        new MethodChannel(
+            registrar.messenger(),
+            "plugins.flutter.io/android_alarm_manager",
+            JSONMethodCodec.INSTANCE);
+    final MethodChannel backgroundChannel =
+        new MethodChannel(
+            registrar.messenger(),
+            "plugins.flutter.io/android_alarm_manager_background",
+            JSONMethodCodec.INSTANCE);
+    AndroidAlarmManagerPlugin plugin = new AndroidAlarmManagerPlugin(registrar.context());
+    channel.setMethodCallHandler(plugin);
+    backgroundChannel.setMethodCallHandler(plugin);
+    registrar.addViewDestroyListener(plugin);
+    AlarmService.setBackgroundChannel(backgroundChannel);
+  }
+
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
     final MethodChannel channel =
         new MethodChannel(
             registrar.messenger(),

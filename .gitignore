@@ -31,3 +31,6 @@ GeneratedPluginRegistrant.m
 GeneratedPluginRegistrant.java
 build/
 .flutter-plugins
+
+packages/battery/android/gradle/
+

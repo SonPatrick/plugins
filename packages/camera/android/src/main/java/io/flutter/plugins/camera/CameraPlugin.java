@@ -31,8 +31,9 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.FlutterEngine;
+import io.flutter.embedding.legacy.PluginRegistry;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
 import io.flutter.view.FlutterView;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,7 +62,7 @@ public class CameraPlugin implements MethodCallHandler {
       };
 
   private static CameraManager cameraManager;
-  private final FlutterView view;
+  private final FlutterEngine engine;
   private Camera camera;
   private Activity activity;
   private Registrar registrar;
@@ -69,9 +70,9 @@ public class CameraPlugin implements MethodCallHandler {
   private Runnable cameraPermissionContinuation;
   private boolean requestingPermission;
 
-  private CameraPlugin(Registrar registrar, FlutterView view, Activity activity) {
+  private CameraPlugin(Registrar registrar, FlutterEngine engine, Activity activity) {
     this.registrar = registrar;
-    this.view = view;
+    this.engine = engine;
     this.activity = activity;
 
     registrar.addRequestPermissionsResultListener(new CameraRequestPermissionsListener());
@@ -125,7 +126,22 @@ public class CameraPlugin implements MethodCallHandler {
             });
   }
 
+  private CameraPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar, FlutterView view, Activity activity) {
+    registrar = null;
+    engine = null;
+  }
+
   public static void registerWith(Registrar registrar) {
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/camera");
+
+    cameraManager = (CameraManager) registrar.activity().getSystemService(Context.CAMERA_SERVICE);
+
+    channel.setMethodCallHandler(
+        new CameraPlugin(registrar, registrar.getFlutterEngine(), registrar.activity()));
+  }
+
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
     final MethodChannel channel =
         new MethodChannel(registrar.messenger(), "plugins.flutter.io/camera");
 
@@ -253,7 +269,7 @@ public class CameraPlugin implements MethodCallHandler {
     Camera(final String cameraName, final String resolutionPreset, @NonNull final Result result) {
 
       this.cameraName = cameraName;
-      textureEntry = view.createSurfaceTexture();
+      textureEntry = engine.getRenderer().createSurfaceTexture();
 
       registerEventChannel();
 

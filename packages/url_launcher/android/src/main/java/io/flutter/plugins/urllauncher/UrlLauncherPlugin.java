@@ -18,7 +18,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
 
 /** UrlLauncherPlugin */
 public class UrlLauncherPlugin implements MethodCallHandler {
@@ -31,8 +31,19 @@ public class UrlLauncherPlugin implements MethodCallHandler {
     channel.setMethodCallHandler(instance);
   }
 
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/url_launcher");
+    UrlLauncherPlugin instance = new UrlLauncherPlugin(registrar);
+    channel.setMethodCallHandler(instance);
+  }
+
   private UrlLauncherPlugin(Registrar registrar) {
     this.mRegistrar = registrar;
+  }
+
+  private UrlLauncherPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    this.mRegistrar = null;
   }
 
   @Override

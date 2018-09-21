@@ -19,7 +19,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.embedding.legacy.PluginRegistry;
 
 /** BatteryPlugin */
 public class BatteryPlugin implements MethodCallHandler, StreamHandler {
@@ -35,8 +35,22 @@ public class BatteryPlugin implements MethodCallHandler, StreamHandler {
     methodChannel.setMethodCallHandler(instance);
   }
 
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    final MethodChannel methodChannel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/battery");
+    final EventChannel eventChannel =
+        new EventChannel(registrar.messenger(), "plugins.flutter.io/charging");
+    final BatteryPlugin instance = new BatteryPlugin(registrar);
+    eventChannel.setStreamHandler(instance);
+    methodChannel.setMethodCallHandler(instance);
+  }
+
   BatteryPlugin(PluginRegistry.Registrar registrar) {
     this.registrar = registrar;
+  }
+
+  BatteryPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    this.registrar = null;
   }
 
   private final PluginRegistry.Registrar registrar;

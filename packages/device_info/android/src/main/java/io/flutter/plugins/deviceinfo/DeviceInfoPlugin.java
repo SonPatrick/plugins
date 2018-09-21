@@ -15,6 +15,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import io.flutter.embedding.legacy.PluginRegistry;
 
 /** DeviceInfoPlugin */
 public class DeviceInfoPlugin implements MethodCallHandler {
@@ -23,7 +24,13 @@ public class DeviceInfoPlugin implements MethodCallHandler {
   private static final String[] EMPTY_STRING_LIST = new String[] {};
 
   /** Plugin registration. */
-  public static void registerWith(Registrar registrar) {
+  public static void registerWith(PluginRegistry.Registrar registrar) {
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/device_info");
+    channel.setMethodCallHandler(new DeviceInfoPlugin());
+  }
+
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
     final MethodChannel channel =
         new MethodChannel(registrar.messenger(), "plugins.flutter.io/device_info");
     channel.setMethodCallHandler(new DeviceInfoPlugin());

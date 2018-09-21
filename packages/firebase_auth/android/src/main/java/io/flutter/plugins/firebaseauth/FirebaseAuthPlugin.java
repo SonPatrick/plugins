@@ -18,7 +18,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.embedding.legacy.PluginRegistry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,8 +47,21 @@ public class FirebaseAuthPlugin implements MethodCallHandler {
     channel.setMethodCallHandler(new FirebaseAuthPlugin(registrar, channel));
   }
 
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_auth");
+    channel.setMethodCallHandler(new FirebaseAuthPlugin(registrar, channel));
+  }
+
   private FirebaseAuthPlugin(PluginRegistry.Registrar registrar, MethodChannel channel) {
     this.registrar = registrar;
+    this.channel = channel;
+    FirebaseApp.initializeApp(registrar.context());
+    this.firebaseAuth = FirebaseAuth.getInstance();
+  }
+
+  private FirebaseAuthPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar, MethodChannel channel) {
+    this.registrar = null;
     this.channel = channel;
     FirebaseApp.initializeApp(registrar.context());
     this.firebaseAuth = FirebaseAuth.getInstance();

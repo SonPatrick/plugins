@@ -39,9 +39,9 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
-import io.flutter.view.FlutterNativeView;
+import io.flutter.embedding.legacy.PluginRegistry;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
+import io.flutter.embedding.FlutterEngine;
 import io.flutter.view.TextureRegistry;
 import java.util.Arrays;
 import java.util.Collections;
@@ -245,15 +245,24 @@ public class VideoPlayerPlugin implements MethodCallHandler {
     registrar.addViewDestroyListener(
         new PluginRegistry.ViewDestroyListener() {
           @Override
-          public boolean onViewDestroy(FlutterNativeView view) {
+          public boolean onViewDestroy(FlutterEngine engine) {
             plugin.onDestroy();
             return false; // We are not interested in assuming ownership of the NativeView.
           }
         });
   }
 
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    // No-op
+  }
+
   private VideoPlayerPlugin(Registrar registrar) {
     this.registrar = registrar;
+    this.videoPlayers = new HashMap<>();
+  }
+
+  private VideoPlayerPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    this.registrar = null;
     this.videoPlayers = new HashMap<>();
   }
 

@@ -9,7 +9,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
 import io.flutter.util.PathUtils;
 
 public class PathProviderPlugin implements MethodCallHandler {
@@ -22,8 +22,19 @@ public class PathProviderPlugin implements MethodCallHandler {
     channel.setMethodCallHandler(instance);
   }
 
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/path_provider");
+    PathProviderPlugin instance = new PathProviderPlugin(registrar);
+    channel.setMethodCallHandler(instance);
+  }
+
   private PathProviderPlugin(Registrar registrar) {
     this.mRegistrar = registrar;
+  }
+
+  private PathProviderPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    this.mRegistrar = null;
   }
 
   @Override

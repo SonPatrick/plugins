@@ -24,7 +24,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.embedding.legacy.PluginRegistry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -48,6 +48,12 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
   private final SparseArray<EventObserver> observers = new SparseArray<>();
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_database");
+    channel.setMethodCallHandler(new FirebaseDatabasePlugin(channel));
+  }
+
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
     final MethodChannel channel =
         new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_database");
     channel.setMethodCallHandler(new FirebaseDatabasePlugin(channel));
@@ -226,6 +232,7 @@ public class FirebaseDatabasePlugin implements MethodCallHandler {
 
   @Override
   public void onMethodCall(final MethodCall call, final Result result) {
+    Log.d("FirebaseDatabasePlugin", "onMethodCall(): " + call.method);
     final Map<String, Object> arguments = call.arguments();
     FirebaseDatabase database;
     String appName = (String) arguments.get("app");

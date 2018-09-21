@@ -11,7 +11,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +26,18 @@ public class PackageInfoPlugin implements MethodCallHandler {
     channel.setMethodCallHandler(new PackageInfoPlugin(registrar));
   }
 
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/package_info");
+    channel.setMethodCallHandler(new PackageInfoPlugin(registrar));
+  }
+
   private PackageInfoPlugin(Registrar registrar) {
     this.mRegistrar = registrar;
+  }
+
+  private PackageInfoPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    this.mRegistrar = null;
   }
 
   @Override

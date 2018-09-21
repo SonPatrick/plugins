@@ -7,7 +7,7 @@ package io.flutter.plugins.share;
 import android.content.Intent;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
 import java.util.Map;
 
 /** Plugin method host for presenting a share sheet via Intent */
@@ -21,10 +21,20 @@ public class SharePlugin implements MethodChannel.MethodCallHandler {
     channel.setMethodCallHandler(instance);
   }
 
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL);
+    SharePlugin instance = new SharePlugin(registrar);
+    channel.setMethodCallHandler(instance);
+  }
+
   private final Registrar mRegistrar;
 
   private SharePlugin(Registrar registrar) {
     this.mRegistrar = registrar;
+  }
+
+  private SharePlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    this.mRegistrar = null;
   }
 
   @Override

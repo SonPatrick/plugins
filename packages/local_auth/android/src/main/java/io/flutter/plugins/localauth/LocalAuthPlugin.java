@@ -9,7 +9,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
 import io.flutter.plugins.localauth.AuthenticationHelper.AuthCompletionHandler;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -25,8 +25,18 @@ public class LocalAuthPlugin implements MethodCallHandler {
     channel.setMethodCallHandler(new LocalAuthPlugin(registrar));
   }
 
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/local_auth");
+    channel.setMethodCallHandler(new LocalAuthPlugin(registrar));
+  }
+
   private LocalAuthPlugin(Registrar registrar) {
     this.registrar = registrar;
+  }
+
+  private LocalAuthPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    this.registrar = null;
   }
 
   @Override

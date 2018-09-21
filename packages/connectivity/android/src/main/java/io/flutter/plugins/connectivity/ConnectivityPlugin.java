@@ -19,16 +19,16 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry;
 
 /** ConnectivityPlugin */
 public class ConnectivityPlugin implements MethodCallHandler, StreamHandler {
-  private final Registrar registrar;
+  private final PluginRegistry.Registrar registrar;
   private final ConnectivityManager manager;
   private BroadcastReceiver receiver;
 
   /** Plugin registration. */
-  public static void registerWith(Registrar registrar) {
+  public static void registerWith(PluginRegistry.Registrar registrar) {
     final MethodChannel channel =
         new MethodChannel(registrar.messenger(), "plugins.flutter.io/connectivity");
     final EventChannel eventChannel =
@@ -38,8 +38,24 @@ public class ConnectivityPlugin implements MethodCallHandler, StreamHandler {
     eventChannel.setStreamHandler(instance);
   }
 
-  private ConnectivityPlugin(Registrar registrar) {
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/connectivity");
+    final EventChannel eventChannel =
+        new EventChannel(registrar.messenger(), "plugins.flutter.io/connectivity_status");
+    ConnectivityPlugin instance = new ConnectivityPlugin(registrar);
+    channel.setMethodCallHandler(instance);
+    eventChannel.setStreamHandler(instance);
+  }
+
+  private ConnectivityPlugin(PluginRegistry.Registrar registrar) {
     this.registrar = registrar;
+    this.manager =
+        (ConnectivityManager) registrar.context().getSystemService(Context.CONNECTIVITY_SERVICE);
+  }
+
+  private ConnectivityPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    this.registrar = null;
     this.manager =
         (ConnectivityManager) registrar.context().getSystemService(Context.CONNECTIVITY_SERVICE);
   }

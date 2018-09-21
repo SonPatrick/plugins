@@ -14,7 +14,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -31,8 +31,18 @@ public class AndroidIntentPlugin implements MethodCallHandler {
     channel.setMethodCallHandler(new AndroidIntentPlugin(registrar));
   }
 
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/android_intent");
+    channel.setMethodCallHandler(new AndroidIntentPlugin(registrar));
+  }
+
   private AndroidIntentPlugin(Registrar registrar) {
     this.mRegistrar = registrar;
+  }
+
+  private AndroidIntentPlugin(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+    this.mRegistrar = null;
   }
 
   private String convertAction(String action) {

@@ -5,13 +5,14 @@
 package io.flutter.plugins.firebase.core;
 
 import android.content.Context;
+import android.util.Log;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.embedding.legacy.PluginRegistry;
 import java.lang.String;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,12 @@ public class FirebaseCorePlugin implements MethodCallHandler {
   private final Context context;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
+    final MethodChannel channel =
+        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_core");
+    channel.setMethodCallHandler(new FirebaseCorePlugin(registrar.activity()));
+  }
+
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
     final MethodChannel channel =
         new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_core");
     channel.setMethodCallHandler(new FirebaseCorePlugin(registrar.activity()));
@@ -49,6 +56,7 @@ public class FirebaseCorePlugin implements MethodCallHandler {
 
   @Override
   public void onMethodCall(MethodCall call, final Result result) {
+    Log.d("FirebaseCorePlugin", "onMethodCall(): " + call.method);
     switch (call.method) {
       case "FirebaseApp#configure":
         {
@@ -65,7 +73,9 @@ public class FirebaseCorePlugin implements MethodCallHandler {
                   .setProjectId(optionsMap.get("projectID"))
                   .setStorageBucket(optionsMap.get("storageBucket"))
                   .build();
+          Log.d("FirebaseCorePlugin", "Calling initializeApp()");
           FirebaseApp.initializeApp(context, options, name);
+          Log.d("FirebaseCorePlugin", "Done initializing app");
           result.success(null);
           break;
         }

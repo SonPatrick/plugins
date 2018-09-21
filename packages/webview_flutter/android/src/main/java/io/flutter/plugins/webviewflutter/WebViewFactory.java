@@ -4,7 +4,7 @@ import android.content.Context;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugin.platform.PlatformView;
-import io.flutter.plugin.platform.PlatformViewFactory;
+import io.flutter.embedding.legacy.PlatformViewFactory;
 import java.util.Map;
 
 public class WebViewFactory extends PlatformViewFactory {

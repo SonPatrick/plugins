@@ -70,6 +70,7 @@ class FirebaseApp {
       'FirebaseApp#configure',
       <String, dynamic>{'name': name, 'options': options.asMap},
     );
+    print('Done configuring FirebaseApp');
     return FirebaseApp(name: name);
   }
 

@@ -1,6 +1,6 @@
 package io.flutter.plugins.webviewflutter;
 
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
 
 /** WebviewFlutterPlugin */
 public class WebviewFlutterPlugin {
@@ -10,5 +10,12 @@ public class WebviewFlutterPlugin {
         .platformViewRegistry()
         .registerViewFactory(
             "plugins.flutter.io/webview", new WebViewFactory(registrar.messenger()));
+  }
+
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
+//    registrar
+//        .platformViewRegistry()
+//        .registerViewFactory(
+//            "plugins.flutter.io/webview", new WebViewFactory(registrar.messenger()));
   }
 }

@@ -10,7 +10,7 @@ import android.util.Base64;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.embedding.legacy.PluginRegistry;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,6 +36,12 @@ public class SharedPreferencesPlugin implements MethodCallHandler {
   private final android.content.SharedPreferences preferences;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
+    MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
+    SharedPreferencesPlugin instance = new SharedPreferencesPlugin(registrar.context());
+    channel.setMethodCallHandler(instance);
+  }
+
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
     MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
     SharedPreferencesPlugin instance = new SharedPreferencesPlugin(registrar.context());
     channel.setMethodCallHandler(instance);

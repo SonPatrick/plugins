@@ -36,3 +36,7 @@ android {
 dependencies {
     implementation "com.android.support:support-v4:26.1.0"
 }
+
+dependencies {
+    //compileOnly fileTree(dir: '/Users/mattcarroll/flutter/engine/src/out/android_debug_unopt', include: ['flutter.jar'])
+}

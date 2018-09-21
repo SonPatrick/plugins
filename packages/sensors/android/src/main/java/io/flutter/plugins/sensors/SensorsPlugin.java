@@ -10,7 +10,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import io.flutter.plugin.common.EventChannel;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.embedding.legacy.PluginRegistry.Registrar;
 
 /** SensorsPlugin */
 public class SensorsPlugin implements EventChannel.StreamHandler {
@@ -22,6 +22,23 @@ public class SensorsPlugin implements EventChannel.StreamHandler {
 
   /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
+    final EventChannel accelerometerChannel =
+        new EventChannel(registrar.messenger(), ACCELEROMETER_CHANNEL_NAME);
+    accelerometerChannel.setStreamHandler(
+        new SensorsPlugin(registrar.context(), Sensor.TYPE_ACCELEROMETER));
+
+    final EventChannel userAccelChannel =
+        new EventChannel(registrar.messenger(), USER_ACCELEROMETER_CHANNEL_NAME);
+    userAccelChannel.setStreamHandler(
+        new SensorsPlugin(registrar.context(), Sensor.TYPE_LINEAR_ACCELERATION));
+
+    final EventChannel gyroscopeChannel =
+        new EventChannel(registrar.messenger(), GYROSCOPE_CHANNEL_NAME);
+    gyroscopeChannel.setStreamHandler(
+        new SensorsPlugin(registrar.context(), Sensor.TYPE_GYROSCOPE));
+  }
+
+  public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
     final EventChannel accelerometerChannel =
         new EventChannel(registrar.messenger(), ACCELEROMETER_CHANNEL_NAME);
     accelerometerChannel.setStreamHandler(
